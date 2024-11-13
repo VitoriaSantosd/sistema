@@ -35,31 +35,28 @@
             </div>
     
             <div class="calendario">
-                <h2>Seu calendário</h2>
+                <h2>Calendário geral</h2>
                 <div id="calendar"></div>
-            </div>
-        </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.0/main.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'pt-br',
-                events: [
-                    {
-                        title: 'Aula de Matemática',
-                        start: '2024-10-20'
-                    },
-                    {
-                        title: 'Feriado Nacional',
-                        start: '2024-11-02'
-                    }
-                ]
-            });
-            calendar.render();
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pt-br',
+            events: [
+                {% for feriado in feriados %}
+                {
+                    title: '{{ feriado.descricao }}',
+                    start: '{{ feriado.data }}',
+                    color: 'red'
+                },
+                {% endfor %}
+            ]
         });
-    </script>
+        calendar.render();
+    });
+</script>
 
 </body>
 </html>

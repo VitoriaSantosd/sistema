@@ -5,84 +5,58 @@
     <title>Calendário Filtrado</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.0/main.min.js"></script>
 </head>
+
 <body>
-    <div class="sidebar">
-        <img src="{% static 'images/fatec.png' %}" alt="Logo Fatec" width="150">
-        <a href="#">Home</a>
-        <a href="#">Calendário</a>
-        <a href="#">Sair</a>
+    <div class="filter-form">
+        <form action="{% url 'calendario_filtrado' %}" method="get">
+            <input type="text" name="curso" placeholder="Curso" value="{{ curso }}">
+            <input type="number" name="periodo" placeholder="Período (1-10)" value="{{ periodo }}">
+            <select name="turno">
+                <option value="Manhã" {% if turno == "Manhã" %}selected{% endif %}>Manhã</option>
+                <option value="Tarde" {% if turno == "Tarde" %}selected{% endif %}>Tarde</option>
+                <option value="Noite" {% if turno == "Noite" %}selected{% endif %}>Noite</option>
+            </select>
+            <button type="submit" class="filter-button">Pesquisar</button>
+        </form>
     </div>
-    
-    <div class="main-content">
-        <h1>Calendário Acadêmico Filtrado</h1>
-            <div class="filter-form">
-                <form action="{% url 'calendario_filtrado' %}" method="get">
-                    <input type="text" name="curso" placeholder="Curso" value="{{ curso }}">
-                    <input type="number" name="periodo" placeholder="Período (1-10)" value="{{ periodo }}">
-                    <select name="turno">
-                        <option value="Manhã" {% if turno == "Manhã" %}selected{% endif %}>Manhã</option>
-                        <option value="Tarde" {% if turno == "Tarde" %}selected{% endif %}>Tarde</option>
-                        <option value="Noite" {% if turno == "Noite" %}selected{% endif %}>Noite</option>
-                    </select>
-                    <button type="submit" class="filter-button">Pesquisar</button>
-                </form>
-            </div>
-        
-        <h2>Feriados</h2>
-            <ul>
-                {% for feriado in feriados %}
-                <li>{{ feriado.data }} - {{ feriado.descricao }} 
-                    (
-                    {% if feriado.nacional %}
-                        Nacional
-                    {% else %}
-                        Regional
-                    {% endif %}
-                    )
-                </li>
-                
-                {% endfor %}
-            </ul>
 
-        <h2>Aulas</h2>
-            <ul>
-                {% if aulas.exists %}
-                    {% for aula in aulas %}
-                        <li>
-                            <strong>Data:</strong> {{ aula.data }} <br>
-                            <strong>Curso:</strong> {{ aula.curso }} <br>
-                            <strong>Descrição:</strong> {{ aula.descricao }} <br>
-                            <strong>Professor:</strong> {{ aula.professor }} 
-                                (
-                                {% if aula.professor.disponibilidade %}
-                                    Presente
-                                {% else %}
-                                    Ausente
-                                {% endif %}
-                                ) <br>
-                            <strong>Sala:</strong> {{ aula.sala }} <br>
-                            <strong>Turno:</strong> {{ aula.turno }}
-                        </li>
-                        <hr>
+    <div id="calendar"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                events: [
+                    {% for feriado in feriados %}
+                    {
+                        title: '{{ feriado.descricao }}',
+                        start: '{{ feriado.data }}',
+                        color: 'red'  // Feriados em vermelho
+                    },
                     {% endfor %}
-                {% else %}
-                    <p>Nenhuma aula encontrada para os critérios selecionados.</p>
-                {% endif %}
-            </ul>
-
-        <a href="{% url 'calendario_geral' %}">Voltar</a>
-
-       <!--   <h2>Eventos Filtro</h2>
-            {% for evento in eventos_filtro %}
-                <p>{{ evento.nome }} - {{ evento.data }}</p>
-            {% endfor %}
-            
-        <h2>Eventos Geral</h2>
-            {% for evento in eventos_geral %}
-                <p>{{ evento.nome }} - {{ evento.data }}</p>/
-            {% endfor %} -->
-    </div>
-
+                    {% for aula in aulas %}
+                    {
+                        title: '{{ aula.descricao }} - {{ aula.curso }}',
+                        start: '{{ aula.data }}',
+                        color: {% if aula.professor.disponibilidade %}'green' 
+                               {% elif aula.professor %} 'yellow' 
+                               {% else %} 'orange' 
+                               {% endif %},
+                        textColor: 'black',
+                        extendedProps: {
+                            sala: '{{ aula.sala }}',
+                            turno: '{{ aula.turno }}'
+                        }
+                    },
+                    {% endfor %}
+                ]
+            });
+            calendar.render();
+        });
+    </script>
 </body>
 </html>

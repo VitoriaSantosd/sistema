@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Atualização de Aulas</title>
+</head>
+<body>
+    <h1>Atualização de Aulas</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Curso</th>
+                    <th>Turno</th>
+                    <th>Período</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aula in aulas %}
+                <tr>
+                    <td>{{ aula.curso }}</td>
+                    <td>{{ aula.turno }}</td>
+                    <td>{{ aula.periodo }}</td>
+                    <td><input type="date" name="data_{{ aula.id }}" value="{{ aula.data|date:'Y-m-d' }}"></td>
+                    <td>
+                        <select name="status_{{ aula.id }}">
+                            <option value="ativa" {% if aula.status == 'ativa' %}selected{% endif %}>Ativa</option>
+                            <option value="cancelada" {% if aula.status == 'cancelada' %}selected{% endif %}>Cancelada</option>
+                        </select>
+                    </td>
+                    <td><button type="submit" name="update_aula" value="{{ aula.id }}">Atualizar</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</body>
+</html>

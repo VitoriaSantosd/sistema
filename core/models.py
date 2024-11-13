@@ -1,6 +1,26 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+class Feriado(models.Model):
+    data = models.DateField()
+    descricao = models.CharField(max_length=255)
+    nacional = models.BooleanField(default=True)
+
+class Professor(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1) 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    nome = models.CharField(max_length=100)
+    disponibilidade = models.BooleanField(default=False)
+
+class Aula(models.Model):
+    data = models.DateField()
+    curso = models.CharField(max_length=100)
+    descricao = models.CharField(max_length=255)
+    professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
+    sala = models.CharField(max_length=10)
+    turno = models.CharField(max_length=10, choices=[('Manhã', 'Manhã'), ('Tarde', 'Tarde'), ('Noite', 'Noite')])
+    periodo = models.CharField(max_length=50)
+
 class Curso(models.Model):
     nome = models.CharField(max_length=100)
 
@@ -19,43 +39,8 @@ class Turno(models.Model):
     def __str__(self):
         return self.nome
 
-class Professor(models.Model):
-    nome = models.CharField(max_length=100)
-    disponibilidade = models.BooleanField(default=True)  # Presente ou ausente
-
-    def __str__(self):
-        return self.nome
-
 class Sala(models.Model):
     nome = models.CharField(max_length=50)
 
     def __str__(self):
         return self.nome
-
-class Feriado(models.Model):
-    data = models.DateField()
-    descricao = models.CharField(max_length=100)
-    nacional = models.BooleanField(default=True)  # Nacional ou Regional
-
-    def __str__(self):
-        return self.descricao
-
-class Aula(models.Model):
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
-    turno = models.ForeignKey(Turno, on_delete=models.CASCADE)
-    professor = models.ForeignKey(Professor, on_delete=models.CASCADE)
-    sala = models.ForeignKey(Sala, on_delete=models.CASCADE)
-    data = models.DateField()
-    descricao = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"{self.curso} - {self.descricao} - {self.data}"
-    
-class CalendarioFiltrado(models.Model):
-    nome = models.CharField(max_length=100)
-    data = models.DateField()
-
-class CalendarioGeral(models.Model):
-    nome = models.CharField(max_length=100)
-    data = models.DateField()
