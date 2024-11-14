@@ -9,6 +9,14 @@
 </head>
 
 <body>
+    <div class="sidebar">
+        <img src="{% static 'images/fatec.png' %}" alt="Logo Fatec" width="150">
+        <a href="{%  url 'calendario_geral' %}">Home</a>
+        <a href="#">Sair</a>
+    </div>
+    
+    <div class="main-content">
+        <h1>Calendário Acadêmico Filtrado</h1>
     <div class="filter-form">
         <form action="{% url 'calendario_filtrado' %}" method="get">
             <input type="text" name="curso" placeholder="Curso" value="{{ curso }}">

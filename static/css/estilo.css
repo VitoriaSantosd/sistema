@@ -18,9 +18,9 @@ body {
     justify-content: space-between;
 }
 
-.sidebar img {
-    display: block;
-    margin: 0 auto 20px auto;
+.sidebar h2 {
+    font-size: 24px;
+    margin: 0 0 30px;
 }
 
 .sidebar a {
@@ -30,6 +30,17 @@ body {
     margin: 10px 0;
 }
 
+.content {
+    margin-left: 220px;
+    padding: 40px;
+    width: calc(100% - 220px);
+    background-color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
 
 
 /* Conteúdo principal */

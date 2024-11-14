@@ -12,10 +12,7 @@
         <img src="{% static 'images/fatec.png' %}" alt="Logo Fatec" width="150">
             <nav>
                 <ul>
-                    <a href="#">Home</a>
                     <a href="{%  url 'calendario_filtrado' %}"> Calendário</a>
-
-                    
                 </ul>
             </nav>
             <div>
@@ -35,28 +32,31 @@
             </div>
     
             <div class="calendario">
-                <h2>Calendário geral</h2>
+                <h2>Seu calendário</h2>
                 <div id="calendar"></div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'pt-br',
-            events: [
-                {% for feriado in feriados %}
-                {
-                    title: '{{ feriado.descricao }}',
-                    start: '{{ feriado.data }}',
-                    color: 'red'
-                },
-                {% endfor %}
-            ]
+            </div>
+        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.0/main.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                events: [
+                    {
+                        title: 'Aula de Matemática',
+                        start: '2024-10-20'
+                    },
+                    {
+                        title: 'Feriado Nacional',
+                        start: '2024-11-02'
+                    }
+                ]
+            });
+            calendar.render();
         });
-        calendar.render();
-    });
-</script>
+    </script>
 
 </body>
 </html>
