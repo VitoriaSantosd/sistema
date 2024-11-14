@@ -2,41 +2,42 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Calendário Acadêmico</title>
+    <title>Calendário Acadêmico Geral</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.0/main.min.js"></script>
 </head>
 
 <body>
     <div class="sidebar">
         <img src="{% static 'images/fatec.png' %}" alt="Logo Fatec" width="150">
-            <nav>
-                <ul>
-                    <a href="{%  url 'calendario_filtrado' %}"> Calendário</a>
-                </ul>
-            </nav>
+        <nav>
+            <ul>
+                <li><a href="{% url 'calendario_filtrado' %}">Calendário Filtrado</a></li>
+            </ul>
+        </nav>
+        <div>
+            <a href="#">Sair</a>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div class="avisos">
+            <div style="display: flex; align-items: center;">
+                <img src="{% static 'images/aviso.png' %}" alt="Ícone de aviso" style="width: 20px; height: 20px;">
+                <span style="margin-left: 10px;">AVISOS</span>
+            </div>
             <div>
-                <a href="#">Sair</a>
+                Nenhum aviso importante no momento.
             </div>
         </div>
     
-        <div class="content">
-            <div class="avisos">
-                <div style="display: flex; align-items: center;">
-                    <img src="{% static 'images/aviso.png' %}" alt="Ícone de aviso" style="width: 20px; height: 20px;">
-                    <span style="margin-left: 10px;">AVISOS</span>
-                </div>
-                <div>
-                    Nenhum aviso importante no momento.
-                </div>
-            </div>
-    
-            <div class="calendario">
-                <h2>Calendário</h2>
-                <div id="calendar"></div>
-            </div>
+        <div class="calendario">
+            <h2>Calendário Acadêmico Geral</h2>
+            <div id="calendar"></div>
         </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.11.0/main.min.js"></script>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -44,15 +45,17 @@
                 initialView: 'dayGridMonth',
                 locale: 'pt-br',
                 events: [
+                    {% for feriado in feriados %}
                     {
-                        title: 'Feriado Nacional',
-                        start: '2024-11-02'
-                    }
+                        title: '{{ feriado.nome }}',
+                        start: '{{ feriado.data }}',
+                        color: 'red'
+                    },
+                    {% endfor %}
                 ]
             });
             calendar.render();
         });
     </script>
-
 </body>
 </html>

@@ -1,30 +1,29 @@
 from django.shortcuts import render
 from .models import Feriado, Aula
-from datetime import date
+from datetime import date, timedelta
 
-def calendario_geral(request):
-    feriados = Feriado.objects.all()
-    return render(request, 'calendario_geral.html', {'feriados': feriados})
+def get_month_days(year, month):
+    """Retorna uma lista com todos os dias do mês especificado."""
+    first_day = date(year, month, 1)
+    days_in_month = (first_day.replace(month=month % 12 + 1, day=1) - timedelta(days=1)).day
+    return [first_day + timedelta(days=i) for i in range(days_in_month)]
 
-def calendario_filtrado(request):
-    curso = request.GET.get('curso')
-    periodo = request.GET.get('periodo')
-    turno = request.GET.get('turno')
-    
-    aulas = Aula.objects.filter(curso=curso, turno=turno, periodo=periodo)
-    feriados = Feriado.objects.all()
+def home_calendar(request):
+    today = date.today()
+    month_days = get_month_days(today.year, today.month)
+    feriados = {f.data: f for f in Feriado.objects.filter(data__month=today.month)}
+    return render(request, 'calendar/home_calendar.html', {
+        'month_days': month_days,
+        'feriados': feriados,
+    })
 
-    return render(request, 'calendario_filtrado.html', {'aulas': aulas, 'feriados': feriados})
-    
-def atualizar_aulas(request):
-    if request.method == "POST":
-        aula_id = request.POST.get("update_aula")
-        if aula_id:
-            aula = Aula.objects.get(id=aula_id)
-            aula.data = request.POST.get(f"data_{aula_id}")
-            aula.status = request.POST.get(f"status_{aula_id}")
-            aula.save()
-            return redirect("atualizar_aulas")  
-
-    aulas = Aula.objects.all()
-    return render(request, "atualizar_aulas.html", {"aulas": aulas})
+def filtered_calendar(request):
+    today = date.today()
+    month_days = get_month_days(today.year, today.month)
+    feriados = {f.data: f for f in Feriado.objects.filter(data__month=today.month)}
+    aulas = {a.data: a for a in Aula.objects.filter(data__month=today.month)}
+    return render(request, 'calendar/filtered_calendar.html', {
+        'month_days': month_days,
+        'feriados': feriados,
+        'aulas': aulas,
+    })

@@ -1,11 +1,18 @@
 from django.contrib import admin
-from .models import Curso, Periodo, Turno, Professor, Sala, Feriado, Aula
+from .models import Feriado, Aula, Sala, Professor, Turma, Curso, Turno
 
+class FeriadoAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'data', 'ponto_facultativo')
+    list_filter = ('ponto_facultativo',)
 
-admin.site.register(Curso)
-admin.site.register(Periodo)
-admin.site.register(Turno)
-admin.site.register(Professor)
+class AulaAdmin(admin.ModelAdmin):
+    list_display = ('professor', 'data', 'status', 'sala', 'turma')
+    list_filter = ('status', 'data', 'turma')
+
+admin.site.register(Feriado, FeriadoAdmin)
+admin.site.register(Aula, AulaAdmin)
 admin.site.register(Sala)
-admin.site.register(Feriado)
-admin.site.register(Aula)
+admin.site.register(Professor)
+admin.site.register(Turma)
+admin.site.register(Curso)
+admin.site.register(Turno)
