@@ -2,10 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Feriado(models.Model):
+    nome = models.CharField(max_length=100)  
     data = models.DateField(unique=True)
-    nome = models.CharField(max_length=100)
     ponto_facultativo = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.nome} - {self.data}"
     def __str__(self):
         return f"{self.nome} - {self.data}"
 
@@ -53,6 +55,8 @@ class Aula(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, null=True, blank=True)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ausente')
 
+    
     def __str__(self):
         return f"Aula em {self.data} - {self.professor.nome} - {self.status}"

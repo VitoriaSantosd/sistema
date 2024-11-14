@@ -29,5 +29,4 @@ def calendario_filtrado(request):
     })
 
 def atualizar_aulas(request):
-   
     return render(request, 'atualizar_aulas.html')
