@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'widget_tweaks',
+    # 'widget_tweaks', Este aplicativo não existe
 ]
 
 MIDDLEWARE = [
@@ -82,16 +82,17 @@ WSGI_APPLICATION = 'calendario_academico.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.hszydxwkkomvpcezlzus',
-        'PASSWORD': 'l0b1Ancositema',
-        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',
-        'PORT': '6543',
+        'NAME': 'postgres',  # Nome do banco de dados
+        'USER': 'postgres.hszydxwkkomvpcezlzus',  # Nome de usuário correto
+        'PASSWORD': 'l0b1Ancositema',  # Senha extraída do link
+        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Host do banco
+        'PORT': '6543',  # Porta especificada no link
         'OPTIONS': {
-            'sslmode': 'require',
+            'sslmode': 'require',  # Necessário para conexões seguras
         },
     }
 }
+
 
 
 # Password validation
